@@ -145,6 +145,7 @@ function onGet(data) {
 }
 */
 
+/**GoogleDriveからテキストを取得 @ https://drive.google.com/drive/folders/104VHEklUV0qQvjTiCamRenYeVC1pSYB5?usp=sharing*/
 function getText(fileId, data) {
   const content = DriveApp.getFileById(fileId)
     .getBlob()

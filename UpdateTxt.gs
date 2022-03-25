@@ -1,4 +1,5 @@
 
+/**情報をアップデートしてドライブのテキストに上書き */
 function updateTxt() {
   url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/versions.json'
   if (isUpdatedURL(url) == ! null) {
