@@ -9559,7 +9559,17 @@ Environment where webAPI can be executed.
   <summary><b>Response</b></summary>
   
   ```json
-  
+  {
+	"systemProfile": "production",
+	"appVersion": "1.13.0",
+	"multiPlayVersion": "miku",
+	"dataVersion": "1.13.0.30",
+	"assetVersion": "1.13.0.30",
+	"appHash": "c6c0f908-bc94-4290-913e-055394757c66",
+	"assetHash": "c24648e7-7098-7228-d6b3-4160e1bfc05d",
+	"appVersionStatus": "available",
+	"prskAPIVersion": "0.0.0 β"
+}
   ```
   </details>
   
