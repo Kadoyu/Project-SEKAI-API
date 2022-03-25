@@ -1,8 +1,8 @@
-/**
- * function testLogic() {
+/**function testLogic() {
   const e = {
     authToken: "HoshinoIchika",
     data: "info",
+    amount: 2
   }
   const out = doGet(e)
   const content = out.getContent()
@@ -191,6 +191,7 @@ function sort(obj, data) {
 }
 
 function amount(obj, data) {
+  if (obj.length === undefined) return obj
   switch (data.amount) {
     case 'all':
       return obj
