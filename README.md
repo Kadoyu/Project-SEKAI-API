@@ -9585,25 +9585,25 @@ Environment where webAPI can be executed.
 **amount** : {number} or **all**  
 Specify the number of GET. (default amount=5)  
 `https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&amount=10`
-- - -
+  
 
 * ### sort
 **sort** : **ascending** or **descending** or **random**  
 Specifies the order of the arrays in ascending, descending, or random order. (default sort=ascending)  
 `https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&sort=random`
-- - -
+  
 
 * ### id
 **id** : {number}  
 Returns the one that matches the id.  
 `https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&id=6`
-- - -
+  
 
 * ### search
 **search** : words  
 Returns matches from search.  
 `https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&search=ぷろせか`
-- - -
+  
  
 # Note
 This API is developed using Google Apps Script.
