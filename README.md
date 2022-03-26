@@ -9611,11 +9611,14 @@ This API is developed using Google Apps Script.
 
  2022/03/26 Beta version released
  
+ 
+# Credit
+ **Data Sources**  
+ * [Sekai-World/sekai-master-db-diff](https://github.com/Sekai-World/sekai-master-db-diff)
+ 
 # Author
- 
-作成情報を列挙する
- 
-* 作成者 [Kadoyu](https://github.com/Kadoyu/)
+
+* Author [Kadoyu](https://github.com/Kadoyu/)
 * Twitter [https://twitter.com/wakiwakkii](https://twitter.com/wakiwakkii)
  
 # License
