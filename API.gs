@@ -33,7 +33,9 @@ function response(content) {
  * @returns {TextOutput}
  */
 function doGet(e) {
-  let contents = e.parameter
+  contents = e.parameter
+
+  if(contents.id !== undefined && typeof contents.id !== 'number') contents.id = parseFloat(contents.id)
 
   const authToken = PropertiesService.getScriptProperties().getProperty('authToken') || ''
 
