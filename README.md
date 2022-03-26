@@ -14,6 +14,10 @@ Web API to get ProjectSEKAI feat. HatsuneMiku DataBase.
 Environment where webAPI can be executed.
 
 # Usage
+**authToken: HoshinoIchika**  
+(I love her.....)
+
+---
 
 ### infomation from ProjectSEKAI
 **Endpoint**: [https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info](https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info)
@@ -9573,10 +9577,39 @@ Environment where webAPI can be executed.
   ```
   </details>
   
+  ---
+  
+# Options
+
+* ### amount
+**amount** : {number} or **all**  
+Specify the number of GET. (default amount=5)  
+`https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&amount=10`
+- - -
+
+* ### sort
+**sort** : **ascending** or **descending** or **random**  
+Specifies the order of the arrays in ascending, descending, or random order. (default sort=ascending)  
+`https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&sort=random`
+- - -
+
+* ### id
+**id** : {number}  
+Returns the one that matches the id.  
+`https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&id=6`
+- - -
+
+* ### search
+**search** : words  
+Returns matches from search.  
+`https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=info&search=ぷろせか`
+- - -
  
 # Note
- 
-注意点などがあれば書く
+This API is developed using Google Apps Script.
+
+
+ 2022/03/26 Beta version released
  
 # Author
  
