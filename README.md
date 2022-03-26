@@ -9620,4 +9620,4 @@ This API is developed using Google Apps Script.
  
 # License
  
-The source code is licensed [MIT](https://opensource.org/licenses/MIT).
+The source code is licensed [MIT](/LICENSE).
