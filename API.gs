@@ -2,7 +2,7 @@
   const e = {
     authToken: "HoshinoIchika",
     data: "info",
-    amount: 2
+    id: '6'
   }
   const out = doGet(e)
   const content = out.getContent()
@@ -46,7 +46,9 @@ function response(content) {
  * @returns {TextOutput}
  */
 function doGet(e) {
-  let contents = e.parameter
+  contents = e.parameter
+
+  if(contents.id !== undefined && typeof contents.id !== 'number') contents.id = parseFloat(contents.id)
 
   const authToken = PropertiesService.getScriptProperties().getProperty('authToken') || ''
 
