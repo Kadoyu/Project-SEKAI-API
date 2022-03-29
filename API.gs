@@ -1,16 +1,3 @@
-/**function testLogic() {
-  const e = {
-    authToken: "HoshinoIchika",
-    data: "info",
-    id: '6'
-  }
-  const out = doGet(e)
-  const content = out.getContent()
-  console.log(JSON.parse(content))
-}*/
-
-
-
 //Driveのファイルid@ https://drive.google.com/drive/folders/104VHEklUV0qQvjTiCamRenYeVC1pSYB5?usp=sharing
 const fileIds = {
   userInformations: '1-UfUHB2VxgTm05BjQgxxClq9Xd5YxdcZ',
@@ -132,20 +119,6 @@ function onGet(data) {
       }
   }
 }
-
-/**
- * function testa() {
-  const data = {
-    data: 'info',
-    amount: 3,
-    //sort: 'random'
-    //search: 'ぷちせか'
-    //id: 4
-  }
-  const result = onGet(data)
-  console.log(result)
-}
-*/
 
 /**GoogleDriveからテキストを取得 @ https://drive.google.com/drive/folders/104VHEklUV0qQvjTiCamRenYeVC1pSYB5?usp=sharing*/
 function getText(fileId, data) {
