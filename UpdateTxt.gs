@@ -1,8 +1,8 @@
 
 /**情報をアップデートしてドライブのテキストに上書き */
 function updateTxt() {
-  url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/versions.json'
-  if (isUpdatedURL(url) == ! null) {
+  const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/versions.json'
+  if (isUpdatedURL(url) !== null) {
 
     const getInfo = () => {
       const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/userInformations.json'
@@ -272,13 +272,15 @@ function updateTxt() {
 }
 
 function isUpdatedURL(url) {
-  const html = UrlFetchApp.fetch(url).getContentText();
-  const json = JSON.stringify(html)
-  console.log(html)
+  const html = UrlFetchApp.fetch(url).getContentText()
+  //文字列変換後，ヘッダなどの見えない部分の削除
+  const htmlBody = JSON.stringify(html)
+  console.log(htmlBody)
+
   //HTML文字列の保存．GASのキャッシュ機能．3600秒間保存する．
   const catche = CacheService.getScriptCache();
   const beforeHtmlBody = catche.get(url);
-  catche.put(url, json, 3600);
+  catche.put(url, htmlBody, 3600);
   //前と変わってないまたは初めての確認時はNULLを返す．更新されてたらURLを返す.
-  return (beforeHtmlBody == json || beforeHtmlBody == null) ? null : url;
+  return (beforeHtmlBody == htmlBody || beforeHtmlBody == null) ? null : url;
 }
