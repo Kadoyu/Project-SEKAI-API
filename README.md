@@ -2,7 +2,8 @@
 
 # Project-SEKAI-API
  
-Web API to get ProjectSEKAI feat. HatsuneMiku DataBase.
+Web API to get ProjectSEKAI feat. HatsuneMiku DataBase.  
+**INFO・CONTACT** https://twitter.com/wakiwakkii
  
 # Features
 * Providing various information in json format as webAPI.
