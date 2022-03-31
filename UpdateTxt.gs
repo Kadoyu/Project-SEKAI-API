@@ -20,13 +20,20 @@ function updateTxt() {
 
     const getEvent = () => {
       const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/events.json'
+      const cardUrl = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/eventCards.json'
       const json = UrlFetchApp.fetch(url).getContentText()
+      const cardJson = UrlFetchApp.fetch(cardUrl).getContentText()
       const obj = JSON.parse(json)
+      const cardObj = JSON.parse(cardJson)
 
       /**各々の追加情報 */
       const assetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/event/'
       const homeAssetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/home/banner/'
       obj.filter(elem => {
+        elem.eventCard = []
+        cardObj.filter(value => {
+          if (elem.id == value.eventId) elem.eventCard.push(value.cardId)
+        })
         elem.logoImg = assetUrl + elem.assetbundleName + '/logo_rip/logo.webp'
         elem.bannerImg = homeAssetUrl + elem.assetbundleName + '_rip/' + elem.assetbundleName + '.webp'
         elem.bgImg = assetUrl + elem.assetbundleName + '/screen_rip/bg.webp'
