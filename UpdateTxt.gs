@@ -30,6 +30,7 @@ function updateTxt() {
       const assetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/event/'
       const homeAssetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/home/banner/'
       obj.filter(elem => {
+        delete elem.eventRankingRewardRanges
         elem.eventCard = []
         cardObj.filter(value => {
           if (elem.id == value.eventId) elem.eventCard.push(value.cardId)
@@ -105,9 +106,21 @@ function updateTxt() {
       const colorObj = JSON.parse(UrlFetchApp.fetch(colorUrl).getContentText())
       const profilesObj = JSON.parse(UrlFetchApp.fetch(profilesUrl).getContentText())
 
+      const characterVoices = [
+        { id: 21, cv: '藤田咲' },
+        { id: 22, cv: '下田麻美' },
+        { id: 23, cv: '下田麻美' },
+        { id: 24, cv: '浅川悠' },
+        { id: 25, cv: '拝郷メイコ' },
+        { id: 26, cv: '風雅なおと' }
+      ]
+
       /**各々の追加情報 */
       const assetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/character/'
       obj.filter(elem => {
+        characterVoices.filter(value => {
+          if (value.id == elem.id) elem.characterVoice = value.cv
+        })
         colorObj.slice(0, 26).filter(value => {
           if (elem.id == value.gameCharacterId) {
             delete value.gameCharacterId
@@ -163,6 +176,7 @@ function updateTxt() {
       const assetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/character/'
       const thumbnailUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/'
       obj.filter(elem => {
+        delete elem.cardParameters
         elem.iconImg = thumbnailUrl + elem.assetbundleName + '_normal.webp'
         elem.cardImg = assetUrl + 'member/' + elem.assetbundleName + '_rip/card_normal.webp'
         elem.cardTrimImg = assetUrl + 'member_cutout_trm/' + elem.assetbundleName + '_rip/normal.webp'
