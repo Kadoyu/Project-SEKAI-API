@@ -8,11 +8,11 @@ const fileIds = {
   characterProfiles: '1H_VuQvlg_AehL_qAXEsGo_oBDxAYhU5Y',
   unitProfiles: '1zm5qieChyN_2qy47eXW3Yab7NGfAQW1K',
   cards: '1tO3_-Ae8sj8JQWgue_D_C4OwCLnpSA8n',
+  skils: '1gMUhx4jbvIaw-vsXqx_sUYANoV2AVgo6',
   honors: '1LvOKXSF23_Kf7X5Ya0W5b_i9XXHuvFRZ',
   gachas: '1jBAHOMW9YM8p0cS4Y-daBT4lo_2oCPVw',
   versions: '141WTGhgct8DHzBQXDlIZDjK0r9-HXDrx'
 }
-
 
 
 /**
@@ -33,9 +33,13 @@ function response(content) {
  * @returns {TextOutput}
  */
 function doGet(e) {
+  //contents = e
   contents = e.parameter
 
-  if(contents.id !== undefined && typeof contents.id !== 'number') contents.id = parseFloat(contents.id)
+  if (contents.id !== undefined && typeof contents.id !== 'number') {
+    if (contents.id === 'null') contents.id = null
+    else contents.id = parseFloat(contents.id)
+  }
 
   const authToken = PropertiesService.getScriptProperties().getProperty('authToken') || ''
 
@@ -59,7 +63,10 @@ function isValid(data) {
   for (let key of keys) {
     if (data[key] === undefined) return false
   }
-  if (data.id !== undefined && typeof data.id !== 'number') return false
+  if (data.id !== undefined && typeof data.id !== 'number') {
+    if (data.id === null) return true
+    else return false
+  }
   return true
 }
 
@@ -78,7 +85,6 @@ function onGet(data) {
     data.search = searchData.replace('　', ' ').split(' ')
   }
 
-  let fileId
   switch (data.data) {
     case 'info':
       fileId = fileIds.userInformations
@@ -133,6 +139,7 @@ function getText(fileId, data) {
 /**検索 */
 function search(obj, data) {
   if (data.search !== undefined) {
+    if (data.search == 'null') return sort(obj, data)
     const result = []
     for (value in obj) {
       for (i in data.search) {
@@ -140,11 +147,11 @@ function search(obj, data) {
         if (kanaToHira(arr).match(data.search[i].toLowerCase())) result.push(obj[value])
       }
     }
-    if (data.id === undefined) return sort(result, data)
+    if (data.id === undefined || data.id === null) return sort(result, data)
     else return sort(result.filter(elem => elem.id === data.id), data)
   }
 
-  if (data.id === undefined) {
+  if (data.id === undefined || data.id === null) {
     return sort(obj, data)
   }
   else {
@@ -166,7 +173,7 @@ function sort(obj, data) {
 }
 
 function amount(obj, data) {
-  if (obj.length === undefined) return obj
+  if (!Array.isArray(obj)) return obj
   switch (data.amount) {
     case 'all':
       return obj
