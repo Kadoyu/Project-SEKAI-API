@@ -9557,6 +9557,25 @@ Environment where webAPI can be executed.
   
   ---
   
+   ### roll Gacha
+   * Specifying by id is required.  
+   * spinCount value is 1 or 10.  
+**Endpoint**: [https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=roll&id=1&spinCount=10](https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=roll&id=1&spinCount=10)
+
+<details>
+  <summary><b>Response</b></summary>
+  
+  ```json
+  [{"id":16,"gachaId":1,"cardId":30,"weight":1,"isWish":false},{"id":24,"gachaId":1,"cardId":46,"weight":1,"isWish":false},
+	{"id":20,"gachaId":1,"cardId":38,"weight":1,"isWish":false},{"id":38,"gachaId":1,"cardId":74,"weight":1,"isWish":false},
+	{"id":38,"gachaId":1,"cardId":74,"weight":1,"isWish":false},{"id":12,"gachaId":1,"cardId":22,"weight":1,"isWish":false},
+	{"id":44,"gachaId":1,"cardId":84,"weight":1,"isWish":false},{"id":28,"gachaId":1,"cardId":54,"weight":1,"isWish":false},
+	{"id":10,"gachaId":1,"cardId":18,"weight":1,"isWish":false},{"id":37,"gachaId":1,"cardId":71,"weight":1,"isWish":false}]
+  ```
+  </details>
+  
+  ---
+  
    ### version
 **Endpoint**: [https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=version](https://script.google.com/macros/s/AKfycbwMoQMBFsZC8u2j8X1yiPBs3E1PYXrh0Yi9_qsk4Tk80WrOeIaoQq6TDlmUe_pT0QHUqg/exec?authToken=HoshinoIchika&data=version)
 
@@ -9578,7 +9597,7 @@ Environment where webAPI can be executed.
   ```
   </details>
   
-  ---
+ 
   
 # Options
 
