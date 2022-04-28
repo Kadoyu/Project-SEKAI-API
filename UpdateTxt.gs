@@ -241,10 +241,6 @@ function updateTxt() {
       return obj
     }
 
-
-
-
-
     const updateFile = (fileId, content) => {
       const file = DriveApp.getFileById(fileId)
       const json = JSON.stringify(content)

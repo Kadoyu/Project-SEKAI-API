@@ -14,6 +14,17 @@ const fileIds = {
   versions: '141WTGhgct8DHzBQXDlIZDjK0r9-HXDrx'
 }
 
+function ttttest() {
+  const option = {
+    authToken: 'HoshinoIchika',
+    data: 'roll',
+    id: 1,
+    spinCount: '10'
+  }
+  const response = onGet(option)
+  console.log(response)
+}
+
 
 /**
  * レスポンスを作成して返します
@@ -34,9 +45,14 @@ function response(content) {
  */
 function doGet(e) {
   //contents = e
-  contents = e.parameter
+  let contents = e.parameter
 
   if (contents.id !== undefined && typeof contents.id !== 'number') {
+    if (contents.id === 'null') contents.id = null
+    else contents.id = parseFloat(contents.id)
+  }
+
+  if (contents.spinCount !== undefined && typeof contents.spinCount !== 'number') {
     if (contents.id === 'null') contents.id = null
     else contents.id = parseFloat(contents.id)
   }
@@ -50,78 +66,85 @@ function doGet(e) {
   let result
   try {
     result = onGet(contents)
-  } catch (e) {
+    if (!result.length && result instanceof Array) result = { error: '各当のデータは見つかりませんでした' }
+    console.log(result)
+  }
+  catch (e) {
     result = { error: e }
+    console.error(result)
   }
 
   return response(result)
 }
 
 
-function isValid(data) {
+function isValid(option) {
   const keys = ['data']
   for (let key of keys) {
-    if (data[key] === undefined) return false
+    if (option[key] === undefined) return false
   }
-  if (data.id !== undefined && typeof data.id !== 'number') {
-    if (data.id === null) return true
+  if (option.id !== undefined && typeof option.id !== 'number') {
+    if (option.id === null) return true
     else return false
   }
   return true
 }
 
-function onGet(data) {
-  if (!isValid(data)) {
+function onGet(option) {
+  if (!isValid(option)) {
     return {
       error: '正しい形式で入力してください'
     }
   }
 
   /**検索用*/
-  if (data.search !== undefined) {
+  if (option.search !== undefined) {
     //カナの場合ひらに変換
-    const searchData = kanaToHira(data.search)
+    const searchData = kanaToHira(option.search)
     //スペースでsplit
-    data.search = searchData.replace('　', ' ').split(' ')
+    option.search = searchData.replace('　', ' ').split(' ')
   }
 
-  switch (data.data) {
+  let fileId
+  switch (option.data) {
     case 'info':
       fileId = fileIds.userInformations
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'event':
       fileId = fileIds.events
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'stamp':
       fileId = fileIds.stamps
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'music':
       fileId = fileIds.musics
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'tip':
       fileId = fileIds.tips
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'character':
       fileId = fileIds.characterProfiles
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'unit':
       fileId = fileIds.unitProfiles
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'card':
       fileId = fileIds.cards
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'mission':
       fileId = fileIds.honors
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'gacha':
       fileId = fileIds.gachas
-      return getText(fileId, data)
+      return getText(fileId, option)
+    case 'roll':
+      return rollGacha(option)
     case 'version':
       fileId = fileIds.versions
-      return getText(fileId, data)
+      return getText(fileId, option)
     default:
       return {
-        error: 'dataを指定してください'
+        error: 'dataを指定してください(GitHub:https://github.com/Kadoyu/Project-SEKAI-API)'
       }
   }
 }
