@@ -170,12 +170,18 @@ function updateTxt() {
 
     const getCard = () => {
       const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/cards.json'
+      const charaUrl = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/gameCharacters.json'
       const obj = JSON.parse(UrlFetchApp.fetch(url).getContentText())
+      const charaObj = JSON.parse(UrlFetchApp.fetch(charaUrl).getContentText())
 
       /**各々の追加情報 */
       const assetUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/character/'
       const thumbnailUrl = 'https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/'
       obj.filter(elem => {
+        const chara = charaObj.filter(value => value.id === elem.characterId)[0]
+        //MEIKO KAITO
+        if (elem.characterId == 25 || elem.characterId == 26) elem.character = { id: chara.id, name: chara.givenName, ruby: chara.givenNameRuby }
+        else elem.character = { id: chara.id, name: chara.firstName + chara.givenName, ruby: chara.firstNameRuby + chara.givenNameRuby }
         delete elem.cardParameters
         elem.iconImg = thumbnailUrl + elem.assetbundleName + '_normal.webp'
         elem.cardImg = assetUrl + 'member/' + elem.assetbundleName + '_rip/card_normal.webp'
@@ -234,10 +240,6 @@ function updateTxt() {
       obj.prskAPIVersion = '0.0.0 β'
       return obj
     }
-
-
-
-
 
     const updateFile = (fileId, content) => {
       const file = DriveApp.getFileById(fileId)

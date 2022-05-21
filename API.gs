@@ -8,11 +8,11 @@ const fileIds = {
   characterProfiles: '1H_VuQvlg_AehL_qAXEsGo_oBDxAYhU5Y',
   unitProfiles: '1zm5qieChyN_2qy47eXW3Yab7NGfAQW1K',
   cards: '1tO3_-Ae8sj8JQWgue_D_C4OwCLnpSA8n',
+  skils: '1gMUhx4jbvIaw-vsXqx_sUYANoV2AVgo6',
   honors: '1LvOKXSF23_Kf7X5Ya0W5b_i9XXHuvFRZ',
   gachas: '1jBAHOMW9YM8p0cS4Y-daBT4lo_2oCPVw',
   versions: '141WTGhgct8DHzBQXDlIZDjK0r9-HXDrx'
 }
-
 
 
 /**
@@ -33,9 +33,18 @@ function response(content) {
  * @returns {TextOutput}
  */
 function doGet(e) {
-  contents = e.parameter
+  //contents = e
+  let contents = e.parameter
 
-  if(contents.id !== undefined && typeof contents.id !== 'number') contents.id = parseFloat(contents.id)
+  if (contents.id !== undefined && typeof contents.id !== 'number') {
+    if (contents.id === 'null') contents.id = null
+    else contents.id = parseFloat(contents.id)
+  }
+
+  if (contents.spinCount !== undefined && typeof contents.spinCount !== 'number') {
+    if (contents.id === 'null') contents.id = null
+    else contents.id = parseFloat(contents.id)
+  }
 
   const authToken = PropertiesService.getScriptProperties().getProperty('authToken') || ''
 
@@ -46,76 +55,85 @@ function doGet(e) {
   let result
   try {
     result = onGet(contents)
-  } catch (e) {
+    if (!result.length && result instanceof Array) result = { error: '各当のデータは見つかりませんでした' }
+    console.log(result)
+  }
+  catch (e) {
     result = { error: e }
+    console.error(result)
   }
 
   return response(result)
 }
 
 
-function isValid(data) {
+function isValid(option) {
   const keys = ['data']
   for (let key of keys) {
-    if (data[key] === undefined) return false
+    if (option[key] === undefined) return false
   }
-  if (data.id !== undefined && typeof data.id !== 'number') return false
+  if (option.id !== undefined && typeof option.id !== 'number') {
+    if (option.id === null) return true
+    else return false
+  }
   return true
 }
 
-function onGet(data) {
-  if (!isValid(data)) {
+function onGet(option) {
+  if (!isValid(option)) {
     return {
       error: '正しい形式で入力してください'
     }
   }
 
   /**検索用*/
-  if (data.search !== undefined) {
+  if (option.search !== undefined) {
     //カナの場合ひらに変換
-    const searchData = kanaToHira(data.search)
+    const searchData = kanaToHira(option.search)
     //スペースでsplit
-    data.search = searchData.replace('　', ' ').split(' ')
+    option.search = searchData.replace('　', ' ').split(' ')
   }
 
   let fileId
-  switch (data.data) {
+  switch (option.data) {
     case 'info':
       fileId = fileIds.userInformations
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'event':
       fileId = fileIds.events
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'stamp':
       fileId = fileIds.stamps
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'music':
       fileId = fileIds.musics
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'tip':
       fileId = fileIds.tips
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'character':
       fileId = fileIds.characterProfiles
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'unit':
       fileId = fileIds.unitProfiles
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'card':
       fileId = fileIds.cards
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'mission':
       fileId = fileIds.honors
-      return getText(fileId, data)
+      return getText(fileId, option)
     case 'gacha':
       fileId = fileIds.gachas
-      return getText(fileId, data)
+      return getText(fileId, option)
+    case 'roll':
+      return rollGacha(option)
     case 'version':
       fileId = fileIds.versions
-      return getText(fileId, data)
+      return getText(fileId, option)
     default:
       return {
-        error: 'dataを指定してください'
+        error: 'dataを指定してください(GitHub:https://github.com/Kadoyu/Project-SEKAI-API)'
       }
   }
 }
@@ -133,6 +151,7 @@ function getText(fileId, data) {
 /**検索 */
 function search(obj, data) {
   if (data.search !== undefined) {
+    if (data.search == 'null') return sort(obj, data)
     const result = []
     for (value in obj) {
       for (i in data.search) {
@@ -140,11 +159,11 @@ function search(obj, data) {
         if (kanaToHira(arr).match(data.search[i].toLowerCase())) result.push(obj[value])
       }
     }
-    if (data.id === undefined) return sort(result, data)
+    if (data.id === undefined || data.id === null) return sort(result, data)
     else return sort(result.filter(elem => elem.id === data.id), data)
   }
 
-  if (data.id === undefined) {
+  if (data.id === undefined || data.id === null) {
     return sort(obj, data)
   }
   else {
@@ -166,7 +185,7 @@ function sort(obj, data) {
 }
 
 function amount(obj, data) {
-  if (obj.length === undefined) return obj
+  if (!Array.isArray(obj)) return obj
   switch (data.amount) {
     case 'all':
       return obj
