@@ -14,17 +14,6 @@ const fileIds = {
   versions: '141WTGhgct8DHzBQXDlIZDjK0r9-HXDrx'
 }
 
-function ttttest() {
-  const option = {
-    authToken: 'HoshinoIchika',
-    data: 'roll',
-    id: 1,
-    spinCount: '10'
-  }
-  const response = onGet(option)
-  console.log(response)
-}
-
 
 /**
  * レスポンスを作成して返します

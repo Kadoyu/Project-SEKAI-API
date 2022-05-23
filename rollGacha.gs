@@ -1,11 +1,16 @@
 function rollGacha(data) {
-  data.spinCount = Number(data.spinCount)
-  if (data.id === undefined) return {error: '[roll]に対するid指定は必須です'}
+  if (data.id === undefined) return { error: '[roll]に対するid指定は必須です' }
   if (data.spinCount === undefined || data.spinCount === null) data.spinCount = 10
-  const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/gachas.json'
-  const cardUrl = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/cards.json'
-  const json = JSON.parse(UrlFetchApp.fetch(url).getContentText())
-  const cards = JSON.parse(UrlFetchApp.fetch(cardUrl).getContentText())
+  data.spinCount = Number(data.spinCount)
+
+  const gachaContent = DriveApp.getFileById(fileIds.gachas)
+    .getBlob()
+    .getDataAsString('utf-8')
+  const cardContent = DriveApp.getFileById(fileIds.cards)
+    .getBlob()
+    .getDataAsString('utf-8')
+  const json = JSON.parse(gachaContent)
+  const cards = JSON.parse(cardContent)
   const gacha = json.filter(elem => elem.id === data.id)[0]
   //console.log(gacha.gachaBehaviors)
   //const behavior = gacha.gachaBehaviors[0]
