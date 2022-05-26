@@ -245,7 +245,7 @@ class GetData {
 
   static version() {
     const obj = getRepoContent('versions.json')
-    obj.prskAPIVersion = '0.1.0 β'
+    obj.prskAPIVersion = '0.1.1 β'
     return obj
   }
 }
@@ -301,6 +301,7 @@ const updateFile = (fileName) => {
       break
     case 'cards.json':
     case 'gameCharacters.json':
+      iconUpdate()
       data = GetData.card()
       setDriveFile(fileIds.cards,data)
       console.log(`[cards]をアップデートしました。`)

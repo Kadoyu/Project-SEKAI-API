@@ -1,12 +1,15 @@
 
 /**アイコンの定期的なアップデート */
 function iconUpdate() {
+  const gitHubService = getGitHubService()
   const url = 'https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/cards.json'
-  const obj = JSON.parse(UrlFetchApp.fetch(url).getContentText())
+  const options = {
+    headers: { Authorization: 'Bearer ' + gitHubService.getAccessToken() }
+  }
+  const obj = JSON.parse(UrlFetchApp.fetch(url, options).getContentText())
 
   const folderId = '1EHtgKybN5OuVtkOM9QFPI93t4siY_BWJ'
-  const folder = DriveApp.getFolderById(folderId)
-  const files = folder.getFiles()
+  const files = DriveApp.getFolderById(folderId).getFiles()
 
   const driveFiles = []
 
@@ -15,16 +18,11 @@ function iconUpdate() {
     const fileName = file.getName()
     driveFiles.push(fileName.slice(0, -4))
   }
-
+  
   const result = []
-
-  /**各々の追加情報 */
   obj.filter(elem => {
-
     delete elem.cardParameters
-
     const indexElem = driveFiles.indexOf(elem.assetbundleName + '_normal')
-
     if (indexElem === -1) result.push(elem.id)
 
     if (elem.cardRarityType == 'rarity_3' || elem.cardRarityType == 'rarity_4') {
@@ -33,14 +31,48 @@ function iconUpdate() {
     }
   })
   console.log(result)
+  new Set(result).forEach(id => {
+    const target = obj.filter(elem => elem.id === id)[0]
+    console.log(target)
+    let fileName = target.assetbundleName + '_normal'
+    let value = {
+      icon: `https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/${fileName}.png`,
+      attr: target.attr,
+      rarity: null, //0=birthday
+      at: false //After Training
+    }
+    switch (target.cardRarityType) {
+      case 'rarity_1':
+        value.rarity = 1
+        break
+      case 'rarity_2':
+        value.rarity = 2
+        break
+      case 'rarity_3':
+        value.rarity = 3
+        break
+      case 'rarity_4':
+        value.rarity = 4
+        break
+      case 'rarity_birthday':
+        value.rarity = 0
+        break
+    }
+    const presentaionId = '1Ruvay7C4NcyCBae_KFzAbgZpcaDgky4yYY9QuoRhwfI'
 
-  /** 
-  for (i of Array.from(new Set(result))) {
-    PropertiesService.getScriptProperties().setProperty('cardId', i)
-    doGetIcon()
-    Utilities.sleep(5 * 1000);
-  }*/
+    const response = insertIcon(value,presentaionId)
+    const fileUrl = convertPresentation_(presentaionId, response, 'png', 1, fileName)
+    console.log(fileUrl.getUrl())
 
+    if (target.cardRarityType === 'rarity_3' || target.cardRarityType === 'rarity_4') {
+      fileName = target.assetbundleName + '_after_training'
+      value.icon = `https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/${fileName}.png`
+      value.at = true
+      const response = insertIcon(value,presentaionId)
+      const fileUrl = convertPresentation_(presentaionId, response, 'png', 1, fileName)
+      console.log(fileUrl.getUrl())
+    }
+  })
 }
 
 function maketest() {
@@ -60,7 +92,7 @@ function maketest() {
 }
 
 
-function insertIcon({ icon: icon, attr: attr, rarity: rarity, at: at }, id = '1Ruvay7C4NcyCBae_KFzAbgZpcaDgky4yYY9QuoRhwfI') {
+function insertIcon({ icon: icon, attr: attr, rarity: rarity, at: at }, presentaion_id = '1Ruvay7C4NcyCBae_KFzAbgZpcaDgky4yYY9QuoRhwfI') {
   let attrId
   switch (attr) {
     case 'cool':
@@ -153,7 +185,7 @@ function insertIcon({ icon: icon, attr: attr, rarity: rarity, at: at }, id = '1R
 
   const imgArr = [iconImg, frameImg, attrImg]
 
-  const presentation = SlidesApp.openById(id)
+  const presentation = SlidesApp.openById(presentaion_id)
   const slide = presentation.getSlides()[0]
   //前のオブジェクトをすべて削除
   for (let elem of slide.getPageElements()) elem.remove()
@@ -171,7 +203,7 @@ function insertIcon({ icon: icon, attr: attr, rarity: rarity, at: at }, id = '1R
     slide.insertImage(starImg.img)
       .setWidth(starImg.width * 0.75)
       .setHeight(starImg.height * 0.75)
-      .setLeft((starImg.x + i * 52) * 0.75)
+      .setLeft((starImg.x + i * 55) * 0.75) //def=52
       .setTop(starImg.y * 0.75)
   }
   presentation.saveAndClose()
@@ -179,7 +211,7 @@ function insertIcon({ icon: icon, attr: attr, rarity: rarity, at: at }, id = '1R
   return slide.getObjectId()
 }
 
-function convertPresentation_(presentation_id, page_id, format, slidesNumber) {
+function convertPresentation_(presentation_id, page_id, format, slidesNumber, file_name = 'undefined') {
   format = format.toLowerCase();
   let ext = format;//ファイル名の拡張子
   switch (format) {
@@ -215,9 +247,9 @@ function convertPresentation_(presentation_id, page_id, format, slidesNumber) {
 
     //フォルダIDを入れる　https://drive.google.com/drive/folders/この部分がフォルダID
 
-    const folder = DriveApp.getFolderById("1O6P581N-CVLQKwHUNjbh9wLJXDwMGRAB");
+    const folder = DriveApp.getFolderById("1EHtgKybN5OuVtkOM9QFPI93t4siY_BWJ");
     const presentaion = SlidesApp.openById(presentation_id);
-    return folder.createFile(response.getBlob()).setName(presentaion.getName() + '_' + slidesNumber + '.' + ext);
+    return folder.createFile(response.getBlob()).setName(file_name + '.' + ext);
 
   }//if
 }//end
