@@ -33,7 +33,6 @@ function response(content) {
  * @returns {TextOutput}
  */
 function doGet(e) {
-  //contents = e
   let contents = e.parameter
 
   if (contents.id !== undefined && typeof contents.id !== 'number') {
@@ -148,26 +147,26 @@ function getText(fileId, data) {
   return search(obj, data)
 }
 
+
 /**検索 */
 function search(obj, data) {
-  if (data.search !== undefined) {
-    if (data.search == 'null') return sort(obj, data)
-    const result = []
-    for (value in obj) {
-      for (i in data.search) {
+  if (data.search === undefined || data.search[0] === 'null' || data.search === null) {
+    if (data.id === undefined || data.id === 'null' || data.id === null) return sort(obj, data)
+    else return sort(obj.filter(elem => elem.id === data.id), data)
+  } else {
+    let result = []
+    for (let value in obj) {
+      for (let i in data.search) {
         const arr = Object.values(obj[value]).join(' ').toLowerCase()
         if (kanaToHira(arr).match(data.search[i].toLowerCase())) result.push(obj[value])
       }
     }
-    if (data.id === undefined || data.id === null) return sort(result, data)
-    else return sort(result.filter(elem => elem.id === data.id), data)
-  }
-
-  if (data.id === undefined || data.id === null) {
-    return sort(obj, data)
-  }
-  else {
-    return sort(obj.filter(elem => elem.id === data.id), data)
+    result = Array.from(new Set(result))
+    if (data.id === undefined || data.id === 'null' || data.id === null) {
+      return sort(result, data)
+    } else {
+      return sort(result.filter(elem => elem.id === data.id), data)
+    }
   }
 }
 

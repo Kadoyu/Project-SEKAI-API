@@ -393,3 +393,8 @@ const getCommitEvent = () => {
   }
   else { console.log('新しいコミットはありません') }
 }
+
+function setCache() {
+  const cache_key = 'sekai_db_latest_commit_id'
+  CacheService.getScriptCache().put(cache_key,'21970583114')
+}
