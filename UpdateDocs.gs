@@ -2,16 +2,14 @@ const sekaiRes_asset = 'https://sekai-res.dnaroma.eu/file/sekai-assets/'
 const minio_asset = 'https://minio.dnaroma.eu/sekai-assets/'
 
 const getRepoContent = (fileName) => {
-  const url = `https://api.github.com/repos/Sekai-World/sekai-master-db-diff/contents/${fileName}`
+  const url = `https://raw.githubusercontent.com/Sekai-World/sekai-master-db-diff/main/${fileName}`
   const gitHubService = getGitHubService()
   const options = {
     headers: { Authorization: 'Bearer ' + gitHubService.getAccessToken() }
   }
   // UrlFetchでデータを取得して、JSONデータをパースする
   const response = JSON.parse(UrlFetchApp.fetch(url, options))
-  const decode = Utilities.base64Decode(response.content, Utilities.Charset.UTF_8)
-  const json = Utilities.newBlob(decode).getDataAsString()
-  return JSON.parse(json)
+  return response
 }
 
 class GetData {
@@ -262,65 +260,100 @@ const updateFile = (fileName) => {
   switch (fileName) {
     case 'userInformations.json':
       data = GetData.info()
-      setDriveFile(fileIds.userInformations,data)
+      setDriveFile(fileIds.userInformations, data)
       console.log(`[userInformations]をアップデートしました。`)
       break
     case 'events.json':
     case 'eventCards.json':
       data = GetData.event()
-      setDriveFile(fileIds.events,data)
+      setDriveFile(fileIds.events, data)
       console.log(`[events]をアップデートしました。`)
       break
     case 'stamps.json':
       data = GetData.stamp()
-      setDriveFile(fileIds.stamps,data)
+      setDriveFile(fileIds.stamps, data)
       console.log(`[stamps]をアップデートしました。`)
       break
     case 'musics.json':
       data = GetData.music()
-      setDriveFile(fileIds.musics,data)
+      setDriveFile(fileIds.musics, data)
       console.log(`[musics]をアップデートしました。`)
       break
     case 'tips.json':
       data = GetData.tip()
-      setDriveFile(fileIds.tips,data)
+      setDriveFile(fileIds.tips, data)
       console.log(`[tips]をアップデートしました。`)
       break
     case 'gameCharacters.json':
     case 'gameCharacterUnits.json':
     case 'characterProfiles.json':
       data = GetData.character()
-      setDriveFile(fileIds.characterProfiles,data)
+      setDriveFile(fileIds.characterProfiles, data)
       console.log(`[characterProfiles]をアップデートしました。`)
       break
     case 'unitProfiles.json':
     case 'gameCharacterUnits.json':
       data = GetData.unit()
-      setDriveFile(fileIds.unitProfiles,data)
+      setDriveFile(fileIds.unitProfiles, data)
       console.log(`[unitProfiles]をアップデートしました。`)
       break
     case 'cards.json':
     case 'gameCharacters.json':
       iconUpdate()
       data = GetData.card()
-      setDriveFile(fileIds.cards,data)
+      setDriveFile(fileIds.cards, data)
       console.log(`[cards]をアップデートしました。`)
       break
     case 'honors.json':
       data = GetData.mission()
-      setDriveFile(fileIds.honors,data)
+      setDriveFile(fileIds.honors, data)
       console.log(`[honors]をアップデートしました。`)
       break
     case 'gachas.json':
       data = GetData.gachaInfo()
-      setDriveFile(fileIds.gachas,data)
+      setDriveFile(fileIds.gachas, data)
       console.log(`[gachas]をアップデートしました。`)
       break
     case 'versions.json':
       data = GetData.version()
-      setDriveFile(fileIds.versions,data)
+      setDriveFile(fileIds.versions, data)
       console.log(`[versions]をアップデートしました。`)
       break
+    case 'all':
+      data = GetData.info()
+      setDriveFile(fileIds.userInformations, data)
+      console.log(`[userInformations]をアップデートしました。`)
+      data = GetData.event()
+      setDriveFile(fileIds.events, data)
+      console.log(`[events]をアップデートしました。`)
+      data = GetData.stamp()
+      setDriveFile(fileIds.stamps, data)
+      console.log(`[stamps]をアップデートしました。`)
+      data = GetData.music()
+      setDriveFile(fileIds.musics, data)
+      console.log(`[musics]をアップデートしました。`)
+      data = GetData.tip()
+      setDriveFile(fileIds.tips, data)
+      console.log(`[tips]をアップデートしました。`)
+      data = GetData.character()
+      setDriveFile(fileIds.characterProfiles, data)
+      console.log(`[characterProfiles]をアップデートしました。`)
+      data = GetData.unit()
+      setDriveFile(fileIds.unitProfiles, data)
+      console.log(`[unitProfiles]をアップデートしました。`)
+      data = GetData.card()
+      setDriveFile(fileIds.cards, data)
+      console.log(`[cards]をアップデートしました。`)
+      data = GetData.mission()
+      setDriveFile(fileIds.honors, data)
+      console.log(`[honors]をアップデートしました。`)
+      data = GetData.gachaInfo()
+      setDriveFile(fileIds.gachas, data)
+      console.log(`[gachas]をアップデートしました。`)
+      data = GetData.version()
+      setDriveFile(fileIds.versions, data)
+      console.log(`[versions]をアップデートしました。`)
+      iconUpdate()
   }
 }
 
@@ -334,67 +367,75 @@ const getCommitEvent = () => {
   const cache = CacheService.getScriptCache()
   // UrlFetchでデータを取得して、JSONデータをパースする
   const response = JSON.parse(UrlFetchApp.fetch(url, options))
+
+  //前回のコミットID
   let commited_id = cache.get(cache_key)
+
+  //もしキャッシュがなかったら最新のコミットIDを設定
   if (commited_id === null) {
     cache.put(cache_key, response[0].id)
     commited_id = response[0].id
   }
+  //コミットIDの比較
   const commited = response.findIndex(elem => elem.id === commited_id)
+
   if (commited !== 0) {
     const events = response.slice(0, commited).filter(event => event.type === "PushEvent")
-
-    let results = []
+    let commitedFiles = []
 
     for (let i in events) {
       const commitUrl = events[i].payload.commits[0].url
       const commit = JSON.parse(UrlFetchApp.fetch(commitUrl, options))
-      const patch = commit.files[0].patch
-        .replace(/\n/g, '')
-        .match(/\+  {.*?\}/g) //追加されたコンテンツのみにマッチ
-      if (patch !== null) {
-        const patch_add = patch.map(elem => elem.match(/\".*?\": .*?\,/g).map(elem2 => {
-          const arr = elem2.slice(0, -1)
-            .split(': ')
-            .map(obj => obj.replace(/^"|"$/g, ''))
-          const num = Number(arr[1])
-          if (!Number.isNaN(num)) arr[1] = num
-          return arr
-        }))
+      //console.log(commit)
+      commitedFiles.push(commit.files[0].filename)
+      let patch = commit.files[0].patch
+      if (patch !== undefined) {
+        patch = patch.replace(/\n/g, '').match(/\+  {.*?\}/g) //追加されたコンテンツのみにマッチ
+        if (patch !== null) {
+          const patch_add = patch.map(elem => elem.match(/\".*?\": .*?\,/g).map(elem2 => {
+            const arr = elem2.slice(0, -1)
+              .split(': ')
+              .map(obj => obj.replace(/^"|"$/g, ''))
+            const num = Number(arr[1])
+            if (!Number.isNaN(num)) arr[1] = num
+            return arr
+          }))
 
-        const added = {
-          file_name: commit.files[0].filename,
-          created_at: events[0].created_at,
-          url: commit.url,
-          raw_url: commit.files[0].raw_url,
-          content_url: commit.files[0].contents_url,
-          contents: Object.fromEntries(patch_add[0])
-        }
-        console.log(added)
+          const added = {
+            file_name: commit.files[0].filename,
+            created_at: events[0].created_at,
+            url: commit.url,
+            raw_url: commit.files[0].raw_url,
+            content_url: commit.files[0].contents_url,
+            contents: Object.fromEntries(patch_add[0])
+          }
+          console.log(added)
 
-        //post to Twitter_prskBOT
-        const prskBot = 'https://script.google.com/macros/s/AKfycbxZemVFuAyXLUStVYXTFabJ3qt9_upebNreatLPRPffdxAY9hHWXTYzIySnj7LEXaXKZQ/exec'
-        const headers = {
-          "Content-Type": "application/json"
+          //post to Twitter_prskBOT
+          const prskBot = 'https://script.google.com/macros/s/AKfycbxZemVFuAyXLUStVYXTFabJ3qt9_upebNreatLPRPffdxAY9hHWXTYzIySnj7LEXaXKZQ/exec'
+          const headers = {
+            "Content-Type": "application/json"
+          }
+          const options = {
+            'headers': headers,
+            'method': 'post',
+            'payload': JSON.stringify(added)
+          }
+          const response = UrlFetchApp.fetch(prskBot, options).getContentText()
         }
-        const options = {
-          'headers': headers,
-          'method': 'post',
-          'payload': JSON.stringify(added)
-        }
-        const response = UrlFetchApp.fetch(prskBot, options).getContentText()
       }
-      results.push(commit.files[0].filename)
     }
-    const resultsFiltered = new Set(results)
-    resultsFiltered.forEach(result => {
-      updateFile(result)
-    })
     cache.put(cache_key, response[0].id)
+    new Set(commitedFiles).forEach(elem => updateFile(elem))
   }
   else { console.log('新しいコミットはありません') }
 }
 
+function updateAll() {
+  updateFile('all')
+}
+
 function setCache() {
   const cache_key = 'sekai_db_latest_commit_id'
-  CacheService.getScriptCache().put(cache_key,'21970583114')
+  CacheService.getScriptCache().put(cache_key, '22140345152')
 }

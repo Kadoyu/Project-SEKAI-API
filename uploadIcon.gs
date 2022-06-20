@@ -30,13 +30,16 @@ function iconUpdate() {
       if (indexElemAT === -1) result.push(elem.id)
     }
   })
+
   console.log(result)
+
+  const minio_asset = 'https://sekai-res.dnaroma.eu'
   new Set(result).forEach(id => {
     const target = obj.filter(elem => elem.id === id)[0]
     console.log(target)
     let fileName = target.assetbundleName + '_normal'
     let value = {
-      icon: `https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/${fileName}.png`,
+      icon: `${minio_asset}/sekai-assets/thumbnail/chara_rip/${fileName}.png`,
       attr: target.attr,
       rarity: null, //0=birthday
       at: false //After Training
@@ -66,21 +69,22 @@ function iconUpdate() {
 
     if (target.cardRarityType === 'rarity_3' || target.cardRarityType === 'rarity_4') {
       fileName = target.assetbundleName + '_after_training'
-      value.icon = `https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/${fileName}.png`
+      value.icon = `${minio_asset}/sekai-assets/thumbnail/chara_rip/${fileName}.png`
       value.at = true
       const response = insertIcon(value,presentaionId)
       const fileUrl = convertPresentation_(presentaionId, response, 'png', 1, fileName)
       console.log(fileUrl.getUrl())
     }
   })
+  console.log(result.length+'コのカードアイコンを追加しました')
 }
 
 function maketest() {
   const value = {
-    icon: 'https://sekai-res.dnaroma.eu/file/sekai-assets/thumbnail/chara_rip/res021_no022_after_training.png',
-    attr: 'mysterious',
+    icon: `https://minio.dnaroma.eu/sekai-assets/thumbnail/chara_rip/res018_no018_normal.png`,
+    attr: 'cool',
     rarity: 4, //0=birthday
-    at: true //After Training
+    at: false //After Training
   }
 
   const id = '1Ruvay7C4NcyCBae_KFzAbgZpcaDgky4yYY9QuoRhwfI'
